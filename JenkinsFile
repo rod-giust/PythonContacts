@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                // Checkout the code from the repository
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                // Install the required Python packages
+                sh 'pip install pep8'
+            }
+        }
+
+        stage('Check Code Style') {
+            steps {
+                // Run pep8 on your Python script
+                sh 'pep8 contact_manager.py'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Code style check passed successfully'
+        }
+        failure {
+            echo 'Code style check failed'
+        }
+    }
+}
+
