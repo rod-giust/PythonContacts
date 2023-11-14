@@ -2,12 +2,20 @@
 import click
 import json
 
-def main():
-# try:
-#    with open("contacts.txt", "r") as file:
-#	contacts = json.load(file)
-# except FileNotFoundError:
+try:
+    with open("contacts.txt", "r") as file:
+	contacts = json.load(file)
+ except FileNotFoundError:
     mylist = []
+    
+@click.group()
+def cli():
+	pass
+	
+@cli.command()
+def list():    
+    
+
     while True:
         operation = input('''
 Menu de contactos:
@@ -30,17 +38,17 @@ Menu de contactos:
             print("Introduzca el email: ")
             email = str(input())
             mylist.append(email)
-            
+           
             with open("contacts.txt", "w") as file:
             	json.dump(mylist, file)
             print("Contacto guardado")
 
-        elif operation == '2':
-            nameSearch = input("Introduzca el Nombre o numero para buscar: \n")
-            if nameSearch in mylist:
-            	print(f"Encontrado el siguiente Contacto:\n Nombre: {name}\n Apellido: {lname}\n Telefono {phone}\n email: {email}\n")
-            else:
-            	print(f"no se encontro {nameSearch}")
+       elif operation == '2':
+           nameSearch = input("Introduzca el Nombre o numero para buscar: \n")
+           if nameSearch in mylist:
+           	print(f"Encontrado el siguiente Contacto:\n Nombre: {name}\n Apellido: {lname}\n Telefono {phone}\n email: {email}\n")
+           else:
+           	print(f"no se encontro {nameSearch}")
 
         elif operation == '3':
             print(mylist)

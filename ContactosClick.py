@@ -2,25 +2,34 @@
 import click
 import os
 
-def add():
-    name = input("Ingrese el Nombre: ")
-    last_name = input("Ingrese el Apellido: ")
-    email = input("Ingrese el e-mail: ")
-    phone = input("Ingrese el telefono: ")
-    with open("contacts.txt", "a") as file:
-        file.write(f"{name},{last_name},{email},{phone}\n")
-    print(" ")
-    print("Contacto agregado!")
-    print(" ")
+@click.command()
+@click.argument("contacts", type=click.Path(exists=False), required=0)
+@click.option("-n", "--name", prompt="Ingrese el nombre: ", help="El nombre del usuario")
+@click.option("-l", "--lname", prompt="Ingrese el apellido: ", help="El apellido del usuario")
+@click.option("-m", "--mail", prompt="Ingrese el e-mail: ", help="El e-mail del usuario")
+@click.option("-p", "--phone", prompt="Ingrese el telefono: ", help="El telefono del usuario")
+def add(name, lname, mail, phone, contacts):
+	filename = contacts if contacts is not None else "contacts.txt"
+	with open(filename, "a+") as f:
+		f.write(f"{name}: {lname}: {mail}: {phone}\n")
+	print(" ")
+	print("Contacto agregado!")
+	print(" ")
+	main()
 
-def find():
-    keyword = input("Ingrese el dato a buscar: ")
-    with open("contacts.txt", "r") as file:
-        contacts = file.readlines()
-        for contact in contacts:
-            if keyword in contact:
-                print(contact.strip())
-
+@click.command()
+@click.argument("contacts", type=click.Path(exists=True), required=False)
+@click.option("-i", "--input", prompt="Ingrese el parametro de busqueda", help="El texto a buscar")
+def find(input, contacts):
+    filename = contacts if contacts is not None else "contacts.txt"
+    with open(filename, "r") as f:
+        lines = f.read().splitlines()
+        matching_lines = [line for line in lines if input.lower() in line.lower()]
+        for line in matching_lines:
+            print(" ")
+            print(line)
+            print(" ")
+    main()
 
 def menu():
     print("Libreta de contactos:")
@@ -31,6 +40,7 @@ def menu():
 
 def help():
     print("Lorem Ipsum")
+    main()
 
 @click.command()
 def main():
